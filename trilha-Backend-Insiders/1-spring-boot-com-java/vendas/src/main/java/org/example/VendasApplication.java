@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.domain.entity.Cliente;
-import org.example.domain.repository.ClienteRepository;
+import org.example.domain.repository.Clientes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +16,7 @@ import java.util.List;
 public class VendasApplication {
 
     @Bean
-    public CommandLineRunner init(@Autowired ClienteRepository clientes){
+    public CommandLineRunner init(@Autowired Clientes clientes){
         return args -> {
             System.out.println("Salvando Clientes");
           clientes.salvar(new Cliente("Douglas"));
