@@ -1,6 +1,8 @@
 package org.example.domain.entity;
 
 import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -12,9 +14,20 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
 
-    public Cliente(){
+    @OneToMany( mappedBy = "cliente" , fetch = FetchType.LAZY )
+    private Set<Pedido> pedidos;
 
+    public Cliente(){
     }
+
+    public Set<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(Set<Pedido> pedidos) {
+        this.pedidos = pedidos;
+    }
+
     public Cliente(String nome) {
         this.nome = nome;
     }
