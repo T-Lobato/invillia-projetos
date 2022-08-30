@@ -71,7 +71,7 @@ public class ProdutoController {
                         ExampleMatcher.StringMatcher.CONTAINING );
 
         Example example = Example.of(filtro, matcher);
-        return repository.findAll();
+        return repository.findAll(example);
     }
 
 }
