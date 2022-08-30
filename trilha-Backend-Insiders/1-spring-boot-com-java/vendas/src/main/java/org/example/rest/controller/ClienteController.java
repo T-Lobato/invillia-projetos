@@ -21,10 +21,18 @@ public class ClienteController {
     @ResponseBody
     public ResponseEntity getClienteById( @PathVariable Integer id ) {
        Optional<Cliente> cliente = clientes.findById(id);
+
        if(cliente.isPresent()) {
            return ResponseEntity.ok( cliente.get() );
        }
+
        return ResponseEntity.notFound().build();
+    }
+    @PostMapping("/api/clientes")
+    @ResponseBody
+    public ResponseEntity save( @RequestBody Cliente cliente ){
+        Cliente clienteSalvo = clientes.save(cliente);
+        return ResponseEntity.ok(clienteSalvo);
     }
 
 }
