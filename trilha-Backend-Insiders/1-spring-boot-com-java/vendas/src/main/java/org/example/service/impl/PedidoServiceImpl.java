@@ -14,6 +14,7 @@ import org.example.exception.RegraNegocioException;
 import org.example.rest.dto.ItemPedidoDTO;
 import org.example.rest.dto.PedidoDTO;
 import org.example.service.PedidoService;
+import org.example.service.exception.PedidoNaoEncontradoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +56,17 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarStatus(Integer id, StatusPedido statusPedido ) {
+        repository
+                .findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow(() -> new PedidoNaoEncontradoException() );
     }
 
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> items){
