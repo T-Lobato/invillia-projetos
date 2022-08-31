@@ -31,7 +31,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public Pedido salvar( PedidoDTO dto ) {
+    public Pedido salvar(PedidoDTO dto ) {
         Integer idCliente = dto.getCliente();
         Cliente cliente = clientesRepository
                 .findById(idCliente)
@@ -42,15 +42,16 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
 
-        List<ItemPedido> itemPedidos = converterItems(pedido, dto.getItems());
+        List<ItemPedido> itemsPedido = converterItems(pedido, dto.getItems());
         repository.save(pedido);
-        itemsPedidoRepository.saveAll(itemPedidos);
-        pedido.setItens(itemPedidos);
+        itemsPedidoRepository.saveAll(itemsPedido);
+        pedido.setItens(itemsPedido);
         return pedido;
     }
+
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> items){
         if(items.isEmpty()){
-            throw new RegraNegocioException("Não é possível realizar um pedido sem items");
+            throw new RegraNegocioException("Não é possível realizar um pedido sem items.");
         }
 
         return items
@@ -59,7 +60,10 @@ public class PedidoServiceImpl implements PedidoService {
                     Integer idProduto = dto.getProduto();
                     Produto produto = produtosRepository
                             .findById(idProduto)
-                            .orElseThrow(() -> new RegraNegocioException("Código de produto inválido"));
+                            .orElseThrow(
+                                    () -> new RegraNegocioException(
+                                            "Código de produto inválido: "+ idProduto
+                                    ));
 
                     ItemPedido itemPedido = new ItemPedido();
                     itemPedido.setQuantidade(dto.getQuantidade());
@@ -67,5 +71,6 @@ public class PedidoServiceImpl implements PedidoService {
                     itemPedido.setProduto(produto);
                     return itemPedido;
                 }).collect(Collectors.toList());
+
     }
 }
