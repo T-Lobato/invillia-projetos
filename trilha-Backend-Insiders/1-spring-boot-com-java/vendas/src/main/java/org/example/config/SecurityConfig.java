@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private UsuarioServiceImpl usuarioService;
     @Autowired
     private JwtService jwtService;
