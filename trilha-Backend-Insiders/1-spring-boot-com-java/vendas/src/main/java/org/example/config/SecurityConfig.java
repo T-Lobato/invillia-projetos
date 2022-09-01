@@ -3,6 +3,7 @@ package org.example.config;
 import org.example.service.impl.UsuarioServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/produtos/**")
                 .hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/usuarios/**")
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
         ;
