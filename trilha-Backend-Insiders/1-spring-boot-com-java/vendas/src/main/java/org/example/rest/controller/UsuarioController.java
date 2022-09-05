@@ -47,5 +47,4 @@ public class UsuarioController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-
 }
