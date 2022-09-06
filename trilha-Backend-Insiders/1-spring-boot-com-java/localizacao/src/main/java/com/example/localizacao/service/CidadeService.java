@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.example.localizacao.domain.repository.specs.CidadeSpecs.habitantesGreaterThan;
+import static com.example.localizacao.domain.repository.specs.CidadeSpecs.nomeEqual;
+
 @Service
 public class CidadeService {
 
@@ -54,6 +57,12 @@ public class CidadeService {
         Example<Cidade> example = Example.of(cidade, matcher);
        return repository.findAll(example);
 
+    }
+
+    public void listarCidadesByNomeSpecs(){
+        repository
+                .findAll(nomeEqual("São Paulo").or(habitantesGreaterThan(1000L)))
+                .forEach(System.out::println);
     }
 
 }
