@@ -2,17 +2,15 @@ package com.example.localizacao.service;
 
 import com.example.localizacao.domain.entity.Cidade;
 import com.example.localizacao.domain.repository.CidadeRepository;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.example.localizacao.domain.repository.specs.CidadeSpecs.habitantesGreaterThan;
-import static com.example.localizacao.domain.repository.specs.CidadeSpecs.nomeEqual;
+import static com.example.localizacao.domain.repository.specs.CidadeSpecs.*;
 
 @Service
 public class CidadeService {
@@ -25,20 +23,27 @@ public class CidadeService {
 
     @Transactional
     void salvarCidade(){
-        var cidade = new Cidade(1L, "São Paulo", 12396372L);
+        var cidade = new Cidade(1L, "São Paulo", 12396372L );
         repository.save(cidade);
     }
 
     public void listarCidadesPorQuantidadeHabitantes(){
-        repository.findByHabitantesLessThanAndNomeLike(1000001L, "Br%").forEach(System.out::println);
+        repository
+                .findByHabitantesLessThanAndNomeLike(1000001L, "Br%")
+                .forEach(System.out::println);
+    }
+    public void listarCidadesPorNomeSQL(){
+        repository
+                .findByNomeSqlNativo("São Paulo")
+                .stream().map(cidadeProjection -> new Cidade(cidadeProjection.getId(), cidadeProjection.getNome(), null))
+                .forEach(System.out::println);
     }
 
     public void listarCidadesPorNome(){
-        Pageable pageable = PageRequest.of(0,10);
+        Pageable pageable = PageRequest.of(2, 2, Sort.by("habitantes"));
         repository
-                .findByNomeLike("Porto%", pageable)
+                .findByNomeLike("%%%%", pageable)
                 .forEach(System.out::println);
-
     }
 
     public void listarCidadesPorHabitantes(){
@@ -55,14 +60,32 @@ public class CidadeService {
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
         Example<Cidade> example = Example.of(cidade, matcher);
-       return repository.findAll(example);
-
+        return repository.findAll(example);
     }
 
-    public void listarCidadesByNomeSpecs(){
+    public void listarCidadesByNomeSpec(){
         repository
-                .findAll(nomeEqual("São Paulo").or(habitantesGreaterThan(1000L)))
+                .findAll(nomeEqual("São Paulo").and(idEqual(1L)))
                 .forEach(System.out::println);
     }
 
+    public void listarCidadesSpecsFiltroDinamico(Cidade filtro){
+        Specification<Cidade> specs = Specification.where((root, query, cb) -> cb.conjunction());
+
+        //select * from cidade where 1 = 1
+
+        if(filtro.getId() != null){
+            specs = specs.and( idEqual(filtro.getId()) );
+        }
+
+        if(StringUtils.hasText(filtro.getNome())){
+            specs = specs.and(nomeLike(filtro.getNome()));
+        }
+
+        if(filtro.getHabitantes() != null){
+            specs = specs.and(habitantesGreaterThan(filtro.getHabitantes()));
+        }
+
+        repository.findAll(specs).forEach(System.out::println);
+    }
 }
