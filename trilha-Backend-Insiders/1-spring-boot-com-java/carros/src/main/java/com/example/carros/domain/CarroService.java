@@ -1,8 +1,5 @@
 package com.example.carros.domain;
 
-import com.example.carros.api.CarrosController;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
 
