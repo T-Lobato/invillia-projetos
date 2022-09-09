@@ -50,6 +50,6 @@ class CarrosApplicationTests {
 	@Test
 	public void testLista() {
 		List<CarroDTO> carros = service.getCarros();
-		assertEquals(31, carros.size());
+		assertEquals(30, carros.size());
 	}
 }
