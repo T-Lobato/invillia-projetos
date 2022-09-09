@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,10 +19,10 @@ class CarrosApplicationTests {
 	private CarroService service;
 
 	@Test
-	void test1() {
+	void testSave() {
 
 		Carro carro = new Carro();
-		carro.setNome("Ferrari");
+		carro.setNome("Porshe");
 		carro.setTipo("esportivos");
 
 		CarroDTO c = service.insert(carro);
@@ -36,7 +37,7 @@ class CarrosApplicationTests {
 		assertTrue(op.isPresent());
 
 		c = op.get();
-		assertEquals("Ferrari", c.getNome());
+		assertEquals("Porshe", c.getNome());
 		assertEquals("esportivos", c.getTipo());
 
 		// Deletar o objeto
@@ -44,6 +45,11 @@ class CarrosApplicationTests {
 
 		// Verificar se deletou
 		assertFalse(service.getCarroById(id).isPresent());
+	}
 
+	@Test
+	public void testLista() {
+		List<CarroDTO> carros = service.getCarros();
+		assertEquals(31, carros.size());
 	}
 }
