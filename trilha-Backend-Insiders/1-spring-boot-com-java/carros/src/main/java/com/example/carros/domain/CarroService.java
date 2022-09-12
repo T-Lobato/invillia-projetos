@@ -1,6 +1,7 @@
 package com.example.carros.domain;
 
 import com.example.carros.domain.dto.CarroDTO;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -30,8 +31,9 @@ public class CarroService {
 //        }
 //        return list;
     }
-    public Optional<CarroDTO> getCarroById(Long id) {
-        return rep.findById(id).map(CarroDTO::create);
+    public CarroDTO getCarroById(Long id) {
+        Optional<Carro> carro = rep.findById(id);
+        return carro.map(CarroDTO::create).orElseThrow(() -> new ObjectNotFoundException(CarroDTO.class, "Carro não encontrado"));
     }
     public List<CarroDTO> getCarrosByTipo(String tipo) {
         return rep.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());

@@ -26,27 +26,8 @@ public class CarrosController {
 
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id) {
-        Optional<CarroDTO> carro = service.getCarroById(id);
-
-//      *** Usando Method Reference ***
-        return carro.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-
-//    *** Usando Lambda ***
-//        return carro.map(c -> ResponseEntity.ok(c))
-//                .orElse(ResponseEntity.notFound().build());
-
-//    *** Usando Operador ternário ***
-//        return carro.isPresent() ?
-//                ResponseEntity.ok(carro.get()) :
-//                ResponseEntity.notFound().build();
-
-//    *** Usando if - else ***
-//        if(carro.isPresent()) {
-//            return ResponseEntity.ok(carro.get());
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
+        CarroDTO carro = service.getCarroById(id);
+        return ResponseEntity.ok(carro);
 
     }
     @GetMapping("/tipo/{tipo}")
