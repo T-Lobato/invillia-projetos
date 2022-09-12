@@ -15,4 +15,10 @@ public class ExceptionConfig {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler({
+            IllegalArgumentException.class
+    })
+    public ResponseEntity errorBadRequest(Exception ex){
+        return ResponseEntity.badRequest().build();
+    }
 }
