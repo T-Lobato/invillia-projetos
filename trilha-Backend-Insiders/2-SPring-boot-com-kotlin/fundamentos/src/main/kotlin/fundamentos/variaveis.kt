@@ -11,7 +11,7 @@ fun main() {
     teste = "Teste"
 
     var texto = "Texto"
-    texto = 123
+//    texto = 123
 
 }
 
