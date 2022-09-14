@@ -60,3 +60,6 @@ fun main() {
 //    println(lista[0])
 //    println(lista.get(0))
 //    println(lista.size)
+//    println(lista.indexOf(6))
+
+}
