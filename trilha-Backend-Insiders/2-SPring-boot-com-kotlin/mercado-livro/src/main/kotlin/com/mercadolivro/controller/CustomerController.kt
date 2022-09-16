@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("customer")
-class CustomerController (
-    val customerService: CustomerService
-        ) {
+class CustomerController(
+    val customerService : CustomerService
+) {
 
     @GetMapping
     fun getAll(@RequestParam name: String?): List<CustomerModel> {
-      return customerService.getAll(name)
+        return customerService.getAll(name)
     }
 
     @PostMapping
@@ -32,8 +32,9 @@ class CustomerController (
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun Update(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest) {
-       customerService.update(customer.toCustomerModel(id))
+    fun update(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest) {
+        val customerSaved = customerService.findById(id)
+        customerService.update(customer.toCustomerModel(customerSaved))
     }
 
     @DeleteMapping("/{id}")
